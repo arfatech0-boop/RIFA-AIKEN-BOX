@@ -1,0 +1,6 @@
+{
+  "name": "Aiken Box",
+  "description": "Plataforma de gestión y reservas para el box de CrossFit Aiken Box. Incluye reserva de turnos, sistema de rifas (con control de alias aiken.box, números del 1 al 200 y confirmación administrativa) y control de pagos y asistencia mensual de los alumnos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
