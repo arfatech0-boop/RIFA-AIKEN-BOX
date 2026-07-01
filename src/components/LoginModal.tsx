@@ -13,6 +13,7 @@ export default function LoginModal({ onClose, onLogin, onRegister, users }: Logi
   const [isRegistering, setIsRegistering] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -41,6 +42,17 @@ export default function LoginModal({ onClose, onLogin, onRegister, users }: Logi
       onRegister(newUser);
       onLogin(newUser);
     } else {
+      // Hardcoded Admin
+      if (username.toLowerCase() === 'miye' && password === 'miye123') {
+        onLogin({
+          id: 'admin-1',
+          username: 'Miye',
+          password: 'miye123',
+          role: 'admin'
+        });
+        return;
+      }
+
       const user = users.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
       if (user) {
         onLogin(user);
@@ -110,7 +122,20 @@ export default function LoginModal({ onClose, onLogin, onRegister, users }: Logi
                 </div>
               </div>
 
-
+              {!isRegistering && (
+                <div className="flex items-center gap-2 mt-2">
+                  <input
+                    type="checkbox"
+                    id="rememberMe"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 rounded border-zinc-700 bg-zinc-900 text-red-600 focus:ring-red-500 focus:ring-offset-zinc-950"
+                  />
+                  <label htmlFor="rememberMe" className="text-xs text-zinc-400 font-medium cursor-pointer">
+                    Mantener sesión iniciada
+                  </label>
+                </div>
+              )}
             </div>
 
             <button
