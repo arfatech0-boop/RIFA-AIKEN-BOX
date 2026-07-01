@@ -25,7 +25,9 @@ import {
   Sliders,
   AlertCircle,
   Edit3,
-  Phone
+  Phone,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { Student, RaffleNumber, Booking, ClassSlot } from '../types';
 
@@ -66,6 +68,7 @@ export default function AdminView({
 }: AdminViewProps) {
   const [adminTab, setAdminTab] = useState<'dashboard' | 'payments' | 'raffle-approvals' | 'class-bookings'>('dashboard');
   const [pendingRaffleView, setPendingRaffleView] = useState<'grid' | 'list'>('list');
+  const [showFullRaffleGrid, setShowFullRaffleGrid] = useState(false);
 
   // Search and filter states
   const [studentSearch, setStudentSearch] = useState('');
@@ -905,20 +908,34 @@ export default function AdminView({
                 <p className="text-xs text-zinc-400">Haz clic en cualquier número para forzar un cambio de estado, registrar una venta manual o liberar el casillero.</p>
               </div>
               
-              <div className="flex flex-wrap gap-2 text-xs text-zinc-500">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded bg-zinc-950 border border-zinc-850" /> Disponible ({200 - confirmedRaffleList.length - pendingRaffleList.length})
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded bg-amber-500/20 border border-amber-500/40" /> Pendiente ({pendingRaffleList.length})
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded bg-red-950/20 border border-red-900/40" /> Vendido ({confirmedRaffleList.length})
-                </span>
+              <div className="flex flex-col sm:items-end gap-3">
+                <div className="flex flex-wrap gap-2 text-xs text-zinc-500">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded bg-zinc-950 border border-zinc-850" /> Disponible ({200 - confirmedRaffleList.length - pendingRaffleList.length})
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded bg-amber-500/20 border border-amber-500/40" /> Pendiente ({pendingRaffleList.length})
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded bg-red-950/20 border border-red-900/40" /> Vendido ({confirmedRaffleList.length})
+                  </span>
+                </div>
+                
+                <button 
+                  onClick={() => setShowFullRaffleGrid(!showFullRaffleGrid)}
+                  className="flex items-center justify-center gap-1.5 w-full sm:w-auto px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs rounded-xl transition cursor-pointer"
+                >
+                  {showFullRaffleGrid ? (
+                    <><ChevronUp className="w-4 h-4" /> Ocultar Cuadrícula</>
+                  ) : (
+                    <><ChevronDown className="w-4 h-4" /> Mostrar Cuadrícula</>
+                  )}
+                </button>
               </div>
             </div>
 
-            <div className="grid grid-cols-5 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-20 gap-1.5 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin">
+            {showFullRaffleGrid && (
+              <div className="grid grid-cols-5 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-20 gap-1.5 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin">
               {raffleNumbers.map((rn) => {
                 const isPending = rn.status === 'pending';
                 const isConfirmed = rn.status === 'confirmed';
@@ -962,6 +979,7 @@ export default function AdminView({
                 );
               })}
             </div>
+            )}
 
             {/* Quick action form for selected number in admin tab */}
             {selectedAdminRaffle !== null && (
