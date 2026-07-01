@@ -43,8 +43,8 @@ export default function App() {
     }
 
     // Raffle
-    const { data: raffleData } = await supabase.from('raffle_numbers').select('*').order('number');
-    if (raffleData) {
+    const { data: raffleData, error: raffleError } = await supabase.from('raffle_numbers').select('*').order('number');
+    if (raffleData && raffleData.length > 0) {
       setRaffleNumbers(raffleData.map(r => ({
         number: r.number,
         status: r.status,
@@ -52,6 +52,12 @@ export default function App() {
         reservedByPhone: r.reserved_by_phone || undefined,
         transferDetails: r.transfer_details || undefined,
         reservedAt: r.reserved_at || undefined
+      })));
+    } else {
+      console.warn("Raffle data empty or error:", raffleError);
+      setRaffleNumbers(Array.from({length: 200}, (_, i) => ({
+        number: i + 1,
+        status: 'available'
       })));
     }
 
@@ -140,13 +146,14 @@ export default function App() {
 
   const handleReserveRaffle = async (numbers: number[], name: string, phone: string, transferDetails: string) => {
     for (const num of numbers) {
-      await supabase.from('raffle_numbers').update({
+      await supabase.from('raffle_numbers').upsert({
+        number: num,
         status: 'pending',
         reserved_by_name: name,
         reserved_by_phone: phone,
         transfer_details: transferDetails,
         reserved_at: new Date().toISOString()
-      }).eq('number', num);
+      }, { onConflict: 'number' });
     }
     await fetchData();
   };
@@ -219,42 +226,45 @@ export default function App() {
   };
 
   const handleApproveRaffle = async (number: number) => {
-    await supabase.from('raffle_numbers').update({ status: 'confirmed' }).eq('number', number);
+    await supabase.from('raffle_numbers').upsert({ number, status: 'confirmed' }, { onConflict: 'number' });
     await fetchData();
   };
 
   const handleRejectRaffle = async (number: number) => {
-    await supabase.from('raffle_numbers').update({
+    await supabase.from('raffle_numbers').upsert({
+      number,
       status: 'available',
       reserved_by_name: null,
       reserved_by_phone: null,
       transfer_details: null,
       reserved_at: null
-    }).eq('number', number);
+    }, { onConflict: 'number' });
     await fetchData();
   };
 
   const handleResetRaffleNumber = async (number: number) => {
-    await supabase.from('raffle_numbers').update({
+    await supabase.from('raffle_numbers').upsert({
+      number,
       status: 'available',
       reserved_by_name: null,
       reserved_by_phone: null,
       transfer_details: null,
       reserved_at: null
-    }).eq('number', number);
+    }, { onConflict: 'number' });
     await fetchData();
   };
 
   const handleManualRaffleReserve = async (
     number: number, name: string, phone: string, transferDetails: string, status: 'pending' | 'confirmed'
   ) => {
-    await supabase.from('raffle_numbers').update({
+    await supabase.from('raffle_numbers').upsert({
+      number,
       status,
       reserved_by_name: name,
       reserved_by_phone: phone,
       transfer_details: transferDetails,
       reserved_at: new Date().toISOString()
-    }).eq('number', number);
+    }, { onConflict: 'number' });
     await fetchData();
   };
 
