@@ -140,7 +140,12 @@ export default function AthleteView({
 
           <div className="mt-8 flex flex-wrap gap-4">
             <button
-              onClick={() => setActiveSubTab('raffle')}
+              onClick={() => {
+                setActiveSubTab('raffle');
+                setTimeout(() => {
+                  document.getElementById('tab-athlete-raffle')?.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+              }}
               className="px-6 py-3 bg-red-600 hover:bg-red-700 active:scale-95 transition text-white font-bold rounded-xl shadow-lg shadow-red-600/20 inline-flex items-center gap-2 text-sm cursor-pointer"
               id="btn-hero-raffle"
             >
