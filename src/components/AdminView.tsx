@@ -935,7 +935,7 @@ export default function AdminView({
             </div>
 
             {showFullRaffleGrid && (
-              <div className="grid grid-cols-5 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-20 gap-1.5 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin">
+              <div className="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-20 gap-1 sm:gap-1.5 max-h-[400px] overflow-y-auto pr-1 sm:pr-2 scrollbar-thin">
               {raffleNumbers.map((rn) => {
                 const isPending = rn.status === 'pending';
                 const isConfirmed = rn.status === 'confirmed';
@@ -963,7 +963,7 @@ export default function AdminView({
                         document.getElementById('admin-raffle-action-box')?.scrollIntoView({ behavior: 'smooth' });
                       }, 100);
                     }}
-                    className={`aspect-square rounded-lg text-[11px] font-bold flex flex-col items-center justify-center transition cursor-pointer ${
+                    className={`aspect-square rounded-md sm:rounded-lg text-[9px] sm:text-[11px] font-bold flex flex-col items-center justify-center transition cursor-pointer ${
                       selectedAdminRaffle === rn.number
                         ? 'ring-2 ring-white scale-95 z-10 bg-zinc-400 text-black'
                         : isConfirmed

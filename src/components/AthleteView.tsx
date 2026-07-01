@@ -20,7 +20,9 @@ import {
   Info,
   MapPin,
   ChevronRight,
-  UserCheck
+  UserCheck,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { Service, ClassSlot, Booking, RaffleNumber } from '../types';
 import { DAYS_OF_WEEK } from '../data/initialData';
@@ -43,6 +45,7 @@ export default function AthleteView({
   onReserveRaffle
 }: AthleteViewProps) {
   const [activeSubTab, setActiveSubTab] = useState<string>('raffle');
+  const [showRaffleGrid, setShowRaffleGrid] = useState(false);
   
   // States for Booking
   const [selectedSlot, setSelectedSlot] = useState<ClassSlot | null>(null);
@@ -575,8 +578,9 @@ export default function AthleteView({
                       <p className="text-xs text-zinc-400">Haz clic para reservar uno o varios números disponibles.</p>
                     </div>
                     
-                    {/* Filters */}
-                    <div className="flex flex-wrap gap-1.5">
+                    {/* Filters & Toggle */}
+                    <div className="flex flex-col sm:items-end gap-3">
+                      <div className="flex flex-wrap gap-1.5">
                       <button 
                         onClick={() => setRaffleFilter('all')}
                         className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
@@ -601,11 +605,24 @@ export default function AthleteView({
                       >
                         Reservados ({pendingRaffleTickets + confirmedRaffleTickets})
                       </button>
+                      </div>
+                      <button 
+                        onClick={() => setShowRaffleGrid(!showRaffleGrid)}
+                        className="flex items-center justify-center gap-1.5 w-full sm:w-auto px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl transition shadow-lg shadow-red-600/20 cursor-pointer"
+                      >
+                        {showRaffleGrid ? (
+                          <><ChevronUp className="w-4 h-4" /> Ocultar Tabla de Números</>
+                        ) : (
+                          <><ChevronDown className="w-4 h-4" /> Abrir Tabla de Números</>
+                        )}
+                      </button>
                     </div>
                   </div>
 
                   {/* Grid of 200 numbers */}
-                  <div className="max-h-[380px] overflow-y-auto pr-2 grid grid-cols-5 sm:grid-cols-10 gap-2 scrollbar-thin scrollbar-thumb-zinc-800">
+                  {showRaffleGrid && (
+                    <>
+                  <div className="max-h-[380px] overflow-y-auto pr-1 grid grid-cols-8 sm:grid-cols-10 gap-1 sm:gap-2 scrollbar-thin scrollbar-thumb-zinc-800">
                     {raffleNumbers
                       .filter(rn => {
                         if (raffleFilter === 'available') return rn.status === 'available';
@@ -622,7 +639,7 @@ export default function AthleteView({
                             key={rn.number}
                             onClick={() => handleRaffleNumClick(rn.number, rn.status)}
                             disabled={isPending || isConfirmed}
-                            className={`aspect-square rounded-xl text-xs font-black transition-all flex flex-col items-center justify-center relative select-none cursor-pointer ${
+                            className={`aspect-square rounded-md sm:rounded-xl text-[9px] sm:text-xs font-black transition-all flex flex-col items-center justify-center relative select-none cursor-pointer ${
                               isSelected
                                 ? 'bg-red-500 text-white border-2 border-white/20 shadow-lg scale-95'
                                 : isConfirmed
@@ -662,6 +679,8 @@ export default function AthleteView({
                       </button>
                     )}
                   </div>
+                  </>
+                  )}
                 </div>
 
                 {/* Reservation Form */}
