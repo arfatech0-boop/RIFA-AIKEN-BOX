@@ -242,10 +242,10 @@ export default function AdminView({
           </div>
         </div>
 
-        <div className="flex border-b border-zinc-800 p-1 bg-zinc-950 rounded-xl max-w-fit">
+        <div className="flex overflow-x-auto scrollbar-none border-b border-zinc-800 p-1 bg-zinc-950 rounded-xl w-full md:max-w-fit gap-1">
           <button
             onClick={() => setAdminTab('dashboard')}
-            className={`px-4 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${
+            className={`whitespace-nowrap px-4 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${
               adminTab === 'dashboard' ? 'bg-red-600 text-white shadow' : 'text-zinc-400 hover:text-white'
             }`}
           >
@@ -253,7 +253,7 @@ export default function AdminView({
           </button>
           <button
             onClick={() => setAdminTab('payments')}
-            className={`px-4 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${
+            className={`whitespace-nowrap px-4 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${
               adminTab === 'payments' ? 'bg-red-600 text-white shadow' : 'text-zinc-400 hover:text-white'
             }`}
           >
@@ -261,7 +261,7 @@ export default function AdminView({
           </button>
           <button
             onClick={() => setAdminTab('raffle-approvals')}
-            className={`px-4 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${
+            className={`whitespace-nowrap px-4 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${
               adminTab === 'raffle-approvals' ? 'bg-red-600 text-white shadow' : 'text-zinc-400 hover:text-white'
             }`}
           >
@@ -269,7 +269,7 @@ export default function AdminView({
           </button>
           <button
             onClick={() => setAdminTab('class-bookings')}
-            className={`px-4 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${
+            className={`whitespace-nowrap px-4 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${
               adminTab === 'class-bookings' ? 'bg-red-600 text-white shadow' : 'text-zinc-400 hover:text-white'
             }`}
           >
